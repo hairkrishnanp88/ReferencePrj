@@ -1,0 +1,52 @@
+
+CREATE TABLE RSR_Designation
+(DesignationID int identity(1,1) primary key not null,DesignationName varchar(150) not null,IsActive bit not null)
+
+CREATE TABLE RSR_Users
+(UserID uniqueidentifier primary key not null,UserTypeID smallint constraint usrtpid foreign key references RSR_UserType(UserTypeID),
+UserName varchar(20) not null,Password varchar(200),FullName varchar(200),
+DesignationID int constraint desid foreign key references RSR_Designation(DesignationID),BankID bigint, SAPID bigint, Mobileno varchar(20),TotYrExp varchar(10),ISActive bit not null,CreatedDate datetime not null,CreatedBy uniqueidentifier not null,ModifiedDate datetime,ModifiedBy uniqueidentifier not null,DeletedDate datetime,DeletedBy uniqueidentifier,DeletedFlag bit)
+
+
+CREATE TABLE RSR_UserType
+(UserTypeID smallint identity(1,1) primary key not null,UserType varchar(100),IsActive bit)
+
+CREATE TABLE RSR_Applications
+(APPID int identity(1,1) primary key not null,APPName varchar(100) not null,
+APPType smallint not null,ISActive bit not null,CreatedDate datetime not null,
+CreatedBy uniqueidentifier constraint usrid foreign key references RSR_Users(UserID) not null,ModifiedDate datetime,ModifiedBy uniqueidentifier not null,DeletedDate datetime,DeletedBy uniqueidentifier,DeletedFlag bit)
+
+CREATE TABLE Country(CountryID int identity(1,1) primary key not null,CountryName varchar(100),IsActive bit not null)
+
+CREATE TABLE ProjectLanguage(ProjectLanguageID int identity(1,1) primary key not null,ProjectLanguage varchar(100),IsActive bit not null)
+
+CREATE TABLE Projects 
+(ProjectID uniqueidentifier primary key not null,ProjectName varchar(150) not null,
+ProjectCode varchar(20),CountryID int constraint cntryid foreign key  References Country(CountryID),
+ApplicationID int constraint appid foreign key references RSR_Applications(APPID),
+ProjectLanguageID int constraint plid foreign key references ProjectLanguage(ProjectLanguageID),
+UATServerAdd varchar(100),UATUsername varchar(20),UATPassword varchar(200),UATDBserver varchar(30),UATDBUsername varchar(20),UATDBPAssword varchar(200),
+SITServerAdd varchar(100),SITUsername varchar(20),SITPassword varchar(200),SITDBserver varchar(30),SITDBUsername varchar(20),SITDBPAssword varchar(200),
+DEVServerAdd varchar(100),DEVUsername varchar(20),DEVPassword varchar(200),DEVDBserver varchar(30),DEVDBUsername varchar(20),DEVDBPAssword varchar(200),
+PRDServerAdd varchar(100),PRDUsername varchar(20),PRDPassword varchar(200),PRDDBserver varchar(30),PRDDBUsername varchar(20),PRDDBPAssword varchar(200),
+CreatedDate datetime not null,
+CreatedBy uniqueidentifier constraint prj_usrid foreign key references RSR_Users(UserID) not null,ModifiedDate datetime,ModifiedBy uniqueidentifier not null,DeletedDate datetime,DeletedBy uniqueidentifier,DeletedFlag bit)
+
+
+CREATE TABLE StatusReportType
+(StatusReportTypeID int identity(1,1) primary key not null,StatusReportType varchar(20),IsActive bit not null)
+
+CREATE TABLE Status
+(StatusID int identity(1,1) primary key not null,StatusName varchar(20),IsActive bit not null)
+
+
+
+CREATE TABLE StatusReport
+(StatusReportID int identity(1,1) primary key not null,FromDate Datetime not null,ToDate Datetime not null,
+StatusReportTypeID int constraint srti foreign key references StatusReportType(StatusReportTypeID),
+ApplicationID int constraint appsid foreign key references RSR_Applications(APPID),
+ProjectID uniqueidentifier  constraint prjctid foreign key references Projects(ProjectID),
+StatusID int constraint stsid foreign key references Status(StatusID),
+UserID uniqueidentifier constraint sts_usrid foreign key references RSR_Users(UserID) not null,
+PlannedStartDate datetime,PlannedEndDate datetime,ActualStartDate datetime,ActualEndDate datetime,Remarks varchar(MAX),CreatedDate datetime not null,
+CreatedBy uniqueidentifier constraint stscr_usrid foreign key references RSR_Users(UserID) not null,ModifiedDate datetime,ModifiedBy uniqueidentifier not null,DeletedDate datetime,DeletedBy uniqueidentifier,DeletedFlag bit)
