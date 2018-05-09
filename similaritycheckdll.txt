@@ -1,0 +1,227 @@
+public DataTable CheckAddressSimilarity(string AddressStringForComparison, string ApplicationNumber_Search, DataTable newTempAddresses, string ComparedAddressType, string QueriedTime, string UserId)
+{
+    IDataReader reader;
+    DataTable table2;
+    string str3 = "";
+    int num = 0;
+    int num2 = 0;
+    int num3 = 0;
+    int num4 = 0;
+    double num5 = 0.0;
+    ArrayList list = new ArrayList();
+    ArrayList list2 = new ArrayList();
+    string[] strArray = AddressStringForComparison.Split(new char[] { ' ', ',', '.', ':' });
+    SimilarityCheckDAO kdao = new SimilarityCheckDAO();
+    using (reader = kdao.GetSimilarityPercentage())
+    {
+        if (!reader.IsClosed && reader.Read())
+        {
+            num4 = !reader["ParamVal"].Equals(DBNull.Value) ? Convert.ToInt32(reader["ParamVal"].ToString()) : 0;
+        }
+    }
+    try
+    {
+        foreach (string str4 in strArray)
+        {
+            using (reader = kdao.GetCommonWordsByWord(str4))
+            {
+                if (!reader.IsClosed)
+                {
+                    if (reader.Read())
+                    {
+                        list.Add(!reader["Category"].Equals(DBNull.Value) ? reader["Category"].ToString() : "");
+                    }
+                    else if (str4.Trim() != "")
+                    {
+                        list2.Add(str4);
+                    }
+                }
+            }
+        }
+        DataTable gridViewSchema = this.GetGridViewSchema();
+        foreach (DataRow row in newTempAddresses.Rows)
+        {
+            if ((Convert.ToString(row["ShortAddress"]).Trim().Length > 0) || (Convert.ToString(row["CommonWords"]).Trim().Length > 0))
+            {
+                num5 = 0.0;
+                num = 0;
+                num2 = 0;
+                string str = Convert.ToString(row["ShortAddress"]);
+                string str2 = Convert.ToString(row["CommonWords"]);
+                string[] strArray2 = str.Split(new char[] { ' ', ',', '.', ':' });
+                string[] strArray3 = str2.Split(new char[] { ' ', ',', '.', ':' });
+                foreach (string str5 in strArray2)
+                {
+                    if (str5.Length > 0)
+                    {
+                        num++;
+                        foreach (string str6 in list2)
+                        {
+                            if (str5 == str6)
+                            {
+                                num3++;
+                                if (num3 == 1)
+                                {
+                                    num2++;
+                                }
+                            }
+                        }
+                        num3 = 0;
+                    }
+                }
+                foreach (string str7 in strArray3)
+                {
+                    if (str7.Length > 0)
+                    {
+                        num++;
+                        foreach (string str8 in list)
+                        {
+                            if (str7 == str8)
+                            {
+                                num2++;
+                            }
+                        }
+                    }
+                }
+                num5 = (num2 * 100) / num;
+                if (num5 > num4)
+                {
+                    DataRow row2 = gridViewSchema.NewRow();
+                    row2["ApplicationNumber"] = row["ApplicationNumber"];
+                    row2["ApplicationDate"] = row["ApplicationDate"];
+                    row2["ApplicantType"] = row["ApplicantType"];
+                    row2["AddressType"] = row["AddressType"];
+                    row2["AddressID"] = row["AddressID"];
+                    row2["Name"] = row["Name"];
+                    row2["Address"] = row["OriginalAddress"];
+                    row2["SimilarityPercentage"] = num5.ToString();
+                    gridViewSchema.Rows.Add(row2);
+                    str3 = kdao.InsertTempAddressHistory(row["ApplicationNumber"].ToString(), row["ApplicationDate"].ToString(), row["ApplicantType"].ToString(), row["AddressType"].ToString(), row["AddressID"].ToString(), row["Name"].ToString(), row["OriginalAddress"].ToString(), ApplicationNumber_Search, QueriedTime, num5.ToString(), ComparedAddressType, UserId);
+                }
+            }
+        }
+        table2 = gridViewSchema;
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return table2;
+}
+
+public IDataReader GetAddressFromTempTable(string ApplicationNumber)
+{
+    IDataReader addressFromTempTable;
+    try
+    {
+        addressFromTempTable = new SimilarityCheckDAO().GetAddressFromTempTable(ApplicationNumber);
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return addressFromTempTable;
+}
+
+public IDataReader GetCommonWordsByWord(string Word)
+{
+    IDataReader commonWordsByWord;
+    try
+    {
+        commonWordsByWord = new SimilarityCheckDAO().GetCommonWordsByWord(Word);
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return commonWordsByWord;
+}
+
+public IDataReader GetCommonWordsByWord(string Word)
+{
+    IDataReader commonWordsByWord;
+    try
+    {
+        commonWordsByWord = new SimilarityCheckDAO().GetCommonWordsByWord(Word);
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return commonWordsByWord;
+}
+
+public IDataReader GetPhoneNoFromTempTable(string PhoneNo, string ApplicationNumber)
+{
+    IDataReader phoneNoFromTempTable;
+    try
+    {
+        phoneNoFromTempTable = new SimilarityCheckDAO().GetPhoneNoFromTempTable(PhoneNo, ApplicationNumber);
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return phoneNoFromTempTable;
+}
+
+public DataSet GetTempAddressHistory(string ApplicationNumber_Search)
+{
+    DataSet tempAddressHistory;
+    SimilarityCheckDAO kdao = new SimilarityCheckDAO();
+    try
+    {
+        tempAddressHistory = kdao.GetTempAddressHistory(ApplicationNumber_Search);
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return tempAddressHistory;
+}
+
+public DataSet GetTempAddressHistoryByAddressType(string ApplicationNumber_Search, string ComparedAddressType, string QueriedTime)
+{
+    DataSet set;
+    SimilarityCheckDAO kdao = new SimilarityCheckDAO();
+    try
+    {
+        set = kdao.GetTempAddressHistoryByAddressType(ApplicationNumber_Search, ComparedAddressType, QueriedTime);
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return set;
+}
+
+public DataSet GetTempPhoneNoHistoryByPhoneNoType(string ApplicationNumber_Search, string ComparedPhoneNoType, string QueriedTime)
+{
+    DataSet set;
+    SimilarityCheckDAO kdao = new SimilarityCheckDAO();
+    try
+    {
+        set = kdao.GetTempPhoneNoHistoryByPhoneNoType(ApplicationNumber_Search, ComparedPhoneNoType, QueriedTime);
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return set;
+}
+
+public string InsertTempPhoneNoHistory(string ApplicationNumber, string ApplicationDate, string ApplicantType, string PhoneType, string PhoneID, string Name, string PhoneNo, string ApplicationNumber_Search, string QueriedTime, string ComparedPhoneNoType)
+{
+    string str2;
+    SimilarityCheckDAO kdao = new SimilarityCheckDAO();
+    try
+    {
+        str2 = kdao.InsertTempPhoneNoHistory(ApplicationNumber, ApplicationDate, ApplicantType, PhoneType, PhoneID, Name, PhoneNo, ApplicationNumber_Search, QueriedTime, ComparedPhoneNoType);
+    }
+    catch (Exception exception)
+    {
+        throw new ApplicationException(base.LogError(exception).ToString(), exception);
+    }
+    return str2;
+}
+
