@@ -1,0 +1,8 @@
+Assess the impact in term of system functionality, full deployment source code to production, scheduler, job scheduler, connectivity from application server to db server
+
+Assess the plan if change to appropriated ID:
+1. ID to Login to the server, we’ll create Individual ID’s in AD and provide access to the server
+2. common id to map this id to any application service, we’l create Service Account in AD and provide necessary access
+
+10.112.176.72 SMEDEV003 (DEV)
+and 10.112.176.40 SMEDEV001
