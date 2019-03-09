@@ -1,0 +1,19 @@
+Image Migration [AIG Life Insurance]
+Roles:
+
+Convert image from MAG to TIF and TIFF to PDF in FORTIS
+Convert mage from BYTES to PDF in MARS
+
+Narrative: 
+
+Conversion of image from MAG to TIF using FCOMAPI and Rea-Convertor and move the image from Fortis to AWD
+Conversion of byte to PDF using PDFSHARP and Generate PDF using Migradoc
+
+Modules:
+Environmnet: ASP.NET4.5, MVC4, Javascript, SQL Server 2008
+Duration: 6 Months
+Team Size: 3
+There is two module one is for FORTIS and another one is for MARS.
+Each fortis is MAG file is taken from Shared path and stored into the AWD shared Path by maintain the status and log in the DB
+MAG file has been read and convert using the Rea-Convertor, some files has not been read properly so it can be read and convert using the FCOMAPI it is applicable for Fortis WorkStation
+Each MARS bytes has been converted into the PDF using the PDF sharp and user comments is wrriten in PDF using Migradoc.
