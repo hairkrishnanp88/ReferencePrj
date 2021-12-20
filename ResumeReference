@@ -1,0 +1,13 @@
+MYSPS Mobile Application 
+Select Portfolio Servicing, Inc. (SPS) having an mobile verison of application called MYSPS develop using the Xamarin technology. Project contains three stages 
+1. Domain Service 
+2. Experiance Service
+3. MYSPS Xamarin Application
+
+Domain Service : It is truly develop using the WEB API. It will fetch the data from the database directly or by using the WCF service and send the response to the Experian service it is act as an Gateway service.
+RSACryptoService provider certificate is using for this service. Password are encrypt and decrypt using the X509 certificate. Swagger and post man can use to send and get request and response respectively. This will get all the data from the database and send the resposne to the Experian service. This is plyaing an major role between the backend and mobile UI
+
+Experian Service: It is develop using the WEB API. It will get the response from the domain service and process the response like filtering an data and Storing the static files and storing PDF document in the Azure portal. This token is handle using the Redis cache, Send the stored documents and static file in JSON format based on the request from Mobile UI.
+Here password is encrypt and decrypt using the TripleDES Alogrithm. This method basically handle the request from the mobile UI and send those request to domain serivce and get the appropriate response from domian service and send to mobile UI. It is playing and intermediate role.
+
+MYSPS Xamarin Application: It is develp using the Xamarin technology. This is and UI bascially, gather the response from the services and align those request in proper way. Can match the response using the model and view will display the content based on the commands. Viewmodel page can match exactly with the response.
