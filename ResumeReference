@@ -11,3 +11,9 @@ Experian Service: It is develop using the WEB API. It will get the response from
 Here password is encrypt and decrypt using the TripleDES Alogrithm. This method basically handle the request from the mobile UI and send those request to domain serivce and get the appropriate response from domian service and send to mobile UI. It is playing and intermediate role.
 
 MYSPS Xamarin Application: It is develp using the Xamarin technology. This is and UI bascially, gather the response from the services and align those request in proper way. Can match the response using the model and view will display the content based on the commands. Viewmodel page can match exactly with the response.
+
+Create Customized tool to compare the SSIS Package 2008 and 2016 after upgrade from 2008 to 2016.
+Compare tool will help to give excat differnce between the different version of SSIs Package
+SQL Server Data Tools (SSDT), create or open an Integration Services project.
+The SSIS Package Upgrade Wizard from SQL Server Data Tools (SSDT), the wizard automatically stores both the original packages and upgraded packages
+
